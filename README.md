@@ -24,13 +24,22 @@ In plain language: When you ask for a recommendation, the system grades every so
 - **What information does your `UserProfile` store?**
   - It stores the user's `favorite_genre`, `favorite_mood`, a specific `target_energy` level (0.0 to 1.0), and a boolean preference for `likes_acoustic`.
 - **How does your `Recommender` compute a score for each song?**
-  - It uses a weighted scoring rule:
-    - **Genre Match:** +10 points (Highest priority).
-    - **Mood Match:** +5 points (Secondary priority).
-    - **Energy Proximity:** Up to +5 points based on how close the song's energy is to the user's target (using a formula: `5 * (1 - abs(song_energy - target_energy))`).
-    - **Acoustic Match:** +2 points if the song's acousticness aligns with the user's preference.
+   ### 👨‍🍳 The Algorithm Recipe
+
+   To find the best songs, the system uses a **Point-Weighting Strategy**. Based on the attribute variety in `songs.csv`, we treat "Genre" as the primary filter and numerical vibes as "fine-tuning."
+
+   | Weight | Feature | Rule |
+   | :--- | :--- | :--- |
+   | **+2.0** | **Genre** | Awarded if the song's genre exactly matches the user's `favorite_genre`. |
+   | **+1.0** | **Mood** | Awarded if the song's mood exactly matches the user's `favorite_mood`. |
+   | **+1.0** | **Energy** | A proximity reward: `1.0 - abs(song_energy - target_energy)`. |
+   | **+0.5** | **Acoustic** | Awarded if the song's acousticness aligns with the user's preference (e.g., both high or both low). |
 - **How do you choose which songs to recommend?**
-  - The system applies the "Ranking Rule": it sorts all songs in descending order by their total calculated score and returns the top `k` (defaulting to 5) results.
+  - The system applies the "Ranking Rule": it sorts all songs in descending order by their total calculated score by the algorithm and returns the top `k` (defaulting to 5) results.
+
+### 📊 Data Flow Map
+
+![Data Flow Map](images/DataFlow.png)
 
 ---
 
@@ -88,6 +97,13 @@ Examples:
 - It only works on a tiny catalog
 - It does not understand lyrics or language
 - It might over favor one genre or mood
+
+### ⚖️ Potential Biases
+
+Even a simple simulation can have built-in biases. In this version, we expect:
+- **Genre Echo Chambers**: Because Genre has a heavy weight (+2.0), the system may create a "filter bubble" where you are never recommended great songs from other genres that match your mood perfectly.
+- **Subjective Labeling Bias**: Attributes like "Energy" and "Mood" are subjective. If the person who tagged the CSV has a different definition of "Chill" than the user, the recommendations will be skewed.
+- **Catalog Bias**: With only 20 songs, the system is biased toward the specific musical tastes of the dataset creator, ignoring thousands of other global genres and styles.
 
 You will go deeper on this in your model card.
 
