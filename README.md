@@ -11,23 +11,26 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
-Replace this paragraph with your own summary of what your version does.
+This version of the music recommender uses a **content-based filtering** approach to match songs to a user's taste profile. It simulates how real-world platforms use song metadata (like acoustic features and genre tags) to predict what a user will enjoy. My system prioritizes genre consistency as the primary filter while using numerical proximity to fine-tune recommendations based on the user's desired energy level and acoustic preferences.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+In plain language: When you ask for a recommendation, the system grades every song in its catalog against your profile. It awards "points" for matches in genre and mood, and then uses math to see how close the song's energy is to your ideal target. Finally, it sorts the list from highest to lowest score and gives you the top matches.
 
-Some prompts to answer:
-
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
-
-You can include a simple diagram or bullet list if helpful.
+- **What features does each `Song` use in your system?**
+  - Our songs use both categorical tags (`genre`, `mood`) and numerical acoustic features (`energy`, `tempo_bpm`, `valence`, `danceability`, `acousticness`).
+- **What information does your `UserProfile` store?**
+  - It stores the user's `favorite_genre`, `favorite_mood`, a specific `target_energy` level (0.0 to 1.0), and a boolean preference for `likes_acoustic`.
+- **How does your `Recommender` compute a score for each song?**
+  - It uses a weighted scoring rule:
+    - **Genre Match:** +10 points (Highest priority).
+    - **Mood Match:** +5 points (Secondary priority).
+    - **Energy Proximity:** Up to +5 points based on how close the song's energy is to the user's target (using a formula: `5 * (1 - abs(song_energy - target_energy))`).
+    - **Acoustic Match:** +2 points if the song's acousticness aligns with the user's preference.
+- **How do you choose which songs to recommend?**
+  - The system applies the "Ranking Rule": it sorts all songs in descending order by their total calculated score and returns the top `k` (defaulting to 5) results.
 
 ---
 
