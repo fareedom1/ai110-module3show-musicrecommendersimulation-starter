@@ -41,6 +41,12 @@ In plain language: When you ask for a recommendation, the system grades every so
 
 ![Data Flow Map](images/DataFlow.png)
 
+### 🖥 Example Output
+
+Here is what your personalized leaderboard looks like in the terminal:
+
+![Terminal Output](images/TerminalOutput.png)
+
 ---
 
 ## Getting Started

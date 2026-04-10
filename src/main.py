@@ -20,14 +20,22 @@ def main() -> None:
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
+    print("\n" + "="*45)
+    print(" 🎵       YOUR TOP RECOMMENDATIONS         🎵")
+    print("="*45 + "\n")
+
+    for i, rec in enumerate(recommendations, 1):
         # A common pattern is: (song, score, explanation)
         song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
-        print()
+        print(f"{i}. {song['title'].upper()} by {song['artist']}")
+        print(f"   🏆 Final Score: {score:.2f}")
+        print("   ✨ Why you'll love it:")
+        
+        # Split the semicolon-separated reasons into clean bullet points
+        reasons = explanation.split("; ")
+        for reason in reasons:
+            print(f"      • {reason}")
+        print("-" * 45)
 
 
 if __name__ == "__main__":
